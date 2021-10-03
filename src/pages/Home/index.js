@@ -17,6 +17,8 @@ export default function Home(){
 
     const [mySquares, setMySquares] = useState([]);
 
+    const [kmSquare, setKmSquare] = useState(10);
+
     const dataExample = {
         basic: [
             420.47440910103313,
@@ -45,10 +47,6 @@ export default function Home(){
     
     
     
-    
-    
-    
-    
 
     useEffect(()=> {
         Geolocation.getCurrentPosition(info => {
@@ -61,14 +59,6 @@ export default function Home(){
                 longitudeDelta: 0.001,
             })
         });
-        // setMyLatitude(-21.7840006);
-        // setMyLongitude(-46.5975968);
-        // setRegion({
-        //     latitude: -21.7840006,
-        //     longitude: -46.5975968,
-        //     latitudeDelta: 0.002,
-        //     longitudeDelta: 0.001,
-        // })
         API.get("temporal/monthly/point?parameters=ALLSKY_SFC_SW_DWN&community=RE&longitude="+myLongitude+"&latitude="+myLatitude+"&format=JSON&start=1981&end=2020&user=DAV")
         .then((response) => {
             console.log(response.data.times.data);
@@ -117,29 +107,29 @@ export default function Home(){
         };
 
         let objTopLeft = { 
-            latitude: squareLatitude+0.119, 
-            longitude: squareLongitude-0.119, 
+            latitude: squareLatitude+(kmSquare*0.009), 
+            longitude: squareLongitude-(kmSquare*0.009), 
             value: dataExample.basic[0],
             color: colorNivel[0],
         };
 
         let objTopCenter = { 
-            latitude: squareLatitude+0.119, 
+            latitude: squareLatitude+(kmSquare*0.009), 
             longitude: squareLongitude, 
             value: dataExample.basic[1],
             color: colorNivel[0],
         }
 
         let objTopRight = { 
-            latitude: squareLatitude+0.119, 
-            longitude: squareLongitude+0.119, 
+            latitude: squareLatitude+(kmSquare*0.009), 
+            longitude: squareLongitude+(kmSquare*0.009), 
             value: dataExample.basic[2],
             color: colorNivel[0],
         }
 
         let objLeft = { 
             latitude: squareLatitude, 
-            longitude: squareLongitude-0.119, 
+            longitude: squareLongitude-(kmSquare*0.009), 
             value: dataExample.basic[3],
             color: colorNivel[0],
         }
@@ -153,74 +143,74 @@ export default function Home(){
 
         let objRight = { 
             latitude: squareLatitude, 
-            longitude: squareLongitude+0.119, 
+            longitude: squareLongitude+(kmSquare*0.009), 
             value: dataExample.basic[5],
             color: colorNivel[0],
         }
 
         let objBottomLeft = { 
-            latitude: squareLatitude-0.119, 
-            longitude: squareLongitude-0.119, 
+            latitude: squareLatitude-(kmSquare*0.009), 
+            longitude: squareLongitude-(kmSquare*0.009), 
             value: dataExample.basic[6],
             color: colorNivel[0],
         }
 
         let objBottomCenter = { 
-            latitude: squareLatitude-0.119, 
+            latitude: squareLatitude-(kmSquare*0.009), 
             longitude: squareLongitude, 
             value: dataExample.basic[7],
             color: colorNivel[0],
         }
 
         let objBottomRight = { 
-            latitude: squareLatitude-0.119, 
-            longitude: squareLongitude+0.119, 
+            latitude: squareLatitude-(kmSquare*0.009), 
+            longitude: squareLongitude+(kmSquare*0.009), 
             value: dataExample.basic[8],
             color: colorNivel[0],
         }
         
         mySquares.map((square) => {
             if(
-                objTopLeft.longitude > square.longitude-0.0595
-                && objTopLeft.longitude < square.longitude+0.0595
-                && objTopLeft.latitude > square.latitude-0.0595
-                && objTopLeft.latitude < square.latitude + 0.0595
+                objTopLeft.longitude > square.longitude-(kmSquare*0.009)/2
+                && objTopLeft.longitude < square.longitude+(kmSquare*0.009)/2
+                && objTopLeft.latitude > square.latitude-(kmSquare*0.009)/2
+                && objTopLeft.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.topleft = 1;
             }
 
             if(
-                objTopCenter.longitude > square.longitude-0.0595
-                && objTopCenter.longitude < square.longitude+0.0595
-                && objTopCenter.latitude > square.latitude-0.0595
-                && objTopCenter.latitude < square.latitude + 0.0595
+                objTopCenter.longitude > square.longitude-(kmSquare*0.009)/2
+                && objTopCenter.longitude < square.longitude+(kmSquare*0.009)/2
+                && objTopCenter.latitude > square.latitude-(kmSquare*0.009)/2
+                && objTopCenter.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.topcenter = 1;
             }
 
             if(
-                objTopRight.longitude > square.longitude-0.0595
-                && objTopRight.longitude < square.longitude+0.0595
-                && objTopRight.latitude > square.latitude-0.0595
-                && objTopRight.latitude < square.latitude + 0.0595
+                objTopRight.longitude > square.longitude-(kmSquare*0.009)/2
+                && objTopRight.longitude < square.longitude+(kmSquare*0.009)/2
+                && objTopRight.latitude > square.latitude-(kmSquare*0.009)/2
+                && objTopRight.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.topright = 1;
             }
 
             if(
-                objLeft.longitude > square.longitude-0.0595
-                && objLeft.longitude < square.longitude+0.0595
-                && objLeft.latitude > square.latitude-0.0595
-                && objLeft.latitude < square.latitude + 0.0595
+                objLeft.longitude > square.longitude-(kmSquare*0.009)/2
+                && objLeft.longitude < square.longitude+(kmSquare*0.009)/2
+                && objLeft.latitude > square.latitude-(kmSquare*0.009)/2
+                && objLeft.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.left = 1;
             }
 
             if(
-                objCenter.longitude > square.longitude-0.0595
-                && objCenter.longitude < square.longitude+0.0595
-                && objCenter.latitude > square.latitude-0.0595
-                && objCenter.latitude < square.latitude + 0.0595
+                objCenter.longitude > square.longitude-(kmSquare*0.009)/2
+                && objCenter.longitude < square.longitude+(kmSquare*0.009)/2
+                && objCenter.latitude > square.latitude-(kmSquare*0.009)/2
+                && objCenter.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.center = 1;
                 oldLatitude = square.latitude;
@@ -228,37 +218,37 @@ export default function Home(){
             }
 
             if(
-                objRight.longitude > square.longitude-0.0595
-                && objRight.longitude < square.longitude+0.0595
-                && objRight.latitude > square.latitude-0.0595
-                && objRight.latitude < square.latitude + 0.0595
+                objRight.longitude > square.longitude-(kmSquare*0.009)/2
+                && objRight.longitude < square.longitude+(kmSquare*0.009)/2
+                && objRight.latitude > square.latitude-(kmSquare*0.009)/2
+                && objRight.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.right = 1;
             }
 
             if(
-                objBottomLeft.longitude > square.longitude-0.0595
-                && objBottomLeft.longitude < square.longitude+0.0595
-                && objBottomLeft.latitude > square.latitude-0.0595
-                && objBottomLeft.latitude < square.latitude + 0.0595
+                objBottomLeft.longitude > square.longitude-(kmSquare*0.009)/2
+                && objBottomLeft.longitude < square.longitude+(kmSquare*0.009)/2
+                && objBottomLeft.latitude > square.latitude-(kmSquare*0.009)/2
+                && objBottomLeft.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.bottomleft = 1;
             }
 
             if(
-                objBottomCenter.longitude > square.longitude-0.0595
-                && objBottomCenter.longitude < square.longitude+0.0595
-                && objBottomCenter.latitude > square.latitude-0.0595
-                && objBottomCenter.latitude < square.latitude + 0.0595
+                objBottomCenter.longitude > square.longitude-(kmSquare*0.009)/2
+                && objBottomCenter.longitude < square.longitude+(kmSquare*0.009)/2
+                && objBottomCenter.latitude > square.latitude-(kmSquare*0.009)/2
+                && objBottomCenter.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.bottomcenter = 1;
             }
 
             if(
-                objBottomRight.longitude > square.longitude-0.0595
-                && objBottomRight.longitude < square.longitude+0.0595
-                && objBottomRight.latitude > square.latitude-0.0595
-                && objBottomRight.latitude < square.latitude + 0.0595
+                objBottomRight.longitude > square.longitude-(kmSquare*0.009)/2
+                && objBottomRight.longitude < square.longitude+(kmSquare*0.009)/2
+                && objBottomRight.latitude > square.latitude-(kmSquare*0.009)/2
+                && objBottomRight.latitude < square.latitude + (kmSquare*0.009)/2
             ){
                 notAdd.bottomright = 1;
             }
@@ -266,29 +256,29 @@ export default function Home(){
 
         if(notAdd.center){
             objTopLeft = { 
-                latitude: oldLatitude+0.119, 
-                longitude: oldLongitude-0.119, 
+                latitude: oldLatitude+(kmSquare*0.009), 
+                longitude: oldLongitude-(kmSquare*0.009), 
                 value: dataExample.basic[0],
                 color: colorNivel[0],
             };
     
             objTopCenter = { 
-                latitude: oldLatitude+0.119, 
+                latitude: oldLatitude+(kmSquare*0.009), 
                 longitude: oldLongitude, 
                 value: dataExample.basic[1],
                 color: colorNivel[0],
             }
     
             objTopRight = { 
-                latitude: oldLatitude+0.119, 
-                longitude: oldLongitude+0.119, 
+                latitude: oldLatitude+(kmSquare*0.009), 
+                longitude: oldLongitude+(kmSquare*0.009), 
                 value: dataExample.basic[2],
                 color: colorNivel[0],
             }
     
             objLeft = { 
                 latitude: oldLatitude, 
-                longitude: oldLongitude-0.119, 
+                longitude: oldLongitude-(kmSquare*0.009), 
                 value: dataExample.basic[3],
                 color: colorNivel[0],
             }
@@ -302,28 +292,28 @@ export default function Home(){
     
             objRight = { 
                 latitude: oldLatitude, 
-                longitude: oldLongitude+0.119, 
+                longitude: oldLongitude+(kmSquare*0.009), 
                 value: dataExample.basic[5],
                 color: colorNivel[0],
             }
     
             objBottomLeft = { 
-                latitude: oldLatitude-0.119, 
-                longitude: oldLongitude-0.119, 
+                latitude: oldLatitude-(kmSquare*0.009), 
+                longitude: oldLongitude-(kmSquare*0.009), 
                 value: dataExample.basic[6],
                 color: colorNivel[0],
             }
     
             objBottomCenter = { 
-                latitude: oldLatitude-0.119, 
+                latitude: oldLatitude-(kmSquare*0.009), 
                 longitude: oldLongitude, 
                 value: dataExample.basic[7],
                 color: colorNivel[0],
             }
     
             objBottomRight = { 
-                latitude: oldLatitude-0.119, 
-                longitude: oldLongitude+0.119, 
+                latitude: oldLatitude-(kmSquare*0.009), 
+                longitude: oldLongitude+(kmSquare*0.009), 
                 value: dataExample.basic[8],
                 color: colorNivel[0],
             }
@@ -396,10 +386,10 @@ export default function Home(){
                     mySquares.map((square) => 
                         <Polygon 
                             coordinates={[
-                                {latitude: square.latitude+0.0595, longitude: square.longitude+0.0595},
-                                {latitude: square.latitude+0.0595, longitude: square.longitude-0.0595},
-                                {latitude: square.latitude-0.0595, longitude: square.longitude-0.0595},
-                                {latitude: square.latitude-0.0595, longitude: square.longitude+0.0595},
+                                {latitude: square.latitude+(kmSquare*0.009)/2, longitude: square.longitude+(kmSquare*0.009)/2},
+                                {latitude: square.latitude+(kmSquare*0.009)/2, longitude: square.longitude-(kmSquare*0.009)/2},
+                                {latitude: square.latitude-(kmSquare*0.009)/2, longitude: square.longitude-(kmSquare*0.009)/2},
+                                {latitude: square.latitude-(kmSquare*0.009)/2, longitude: square.longitude+(kmSquare*0.009)/2},
                             ]}
                             strokeColor={'transparent'}
                             fillColor={square.color}
