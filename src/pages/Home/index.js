@@ -29,19 +29,7 @@ export default function Home(){
     const [powerSelected, setPowerSelected] = useState(0);
     const [lineSelected, setLineSelected] = useState(0);
 
-    const dataExample = {
-        basic: [
-            420.47440910103313,
-            420.47440910103313,
-            420.8340101150192,
-            420.29361736867463,
-            420.29361736867463,
-            421.7242082364432,
-            420.29361736867463,
-            420.29361736867463,
-            421.7242082364432
-        ],
-    }
+    const [lineImportance, setLineImportance] = useState(0);
 
     const colorNivel = [
         "rgba(255, 224, 178, 0.4)",
@@ -88,8 +76,6 @@ export default function Home(){
         var lat_array = setArray(km/2, lat);
         var long_array = setArray(km/2, long);
         
-        //PEGAR O ARQUIVO JSON
-        console.log(dataPosts.type);
     
         var findPost = 0;
         dataPosts.features.map(x => {
@@ -99,6 +85,7 @@ export default function Home(){
             )
             findPost = 1;
         });
+        console.log(findPost);
         return findPost;
     
         /* foreach (data->features as f) {
@@ -112,9 +99,6 @@ export default function Home(){
     }
 
     async function getCoefficient(lat, long) {
-    
-        /* res = this->client->request("GET", "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,ALLSKY_SFC_SW_DWN&community=RE&longitude=" . long . "&latitude=" . lat . "&format=JSON&start=2010&end=2020");
-        req = json_decode(res->getBody()->getContents()); */
     
         return await API.get("temporal/monthly/point?parameters=T2M,ALLSKY_SFC_SW_DWN&community=RE&longitude=" + long + "&latitude=" + lat + "&format=JSON&start=2010&end=2020")
             .then((res) => {
@@ -169,7 +153,7 @@ export default function Home(){
         basic_return.push(await getCoefficient(lat_array[0], long_array[2]));
     
         var comp_return = [];
-        if (comp == 'true') {
+        if (comp == true) {
             comp_return.push(complement(lat_array[2], long_array[0], km));
             comp_return.push(complement(lat_array[2], long_array[1], km));
             comp_return.push(complement(lat_array[2], long_array[2], km));
@@ -194,24 +178,16 @@ export default function Home(){
     
 
     useEffect(()=> {
-        // Geolocation.getCurrentPosition(info => {
-        //     setMyLatitude(info.coords.latitude);
-        //     setMyLongitude(info.coords.longitude);
-        //     setRegion({
-        //         latitude: info.coords.latitude,
-        //         longitude: info.coords.longitude,
-        //         latitudeDelta: 0.002,
-        //         longitudeDelta: 0.001,
-        //     })
-        // });
-        setMyLatitude(-21);
-        setMyLongitude(-41);
-        setRegion({
-            latitude: -21,
-            longitude: -41,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.01,
-        })
+        Geolocation.getCurrentPosition(info => {
+            setMyLatitude(info.coords.latitude);
+            setMyLongitude(info.coords.longitude);
+            setRegion({
+                latitude: info.coords.latitude,
+                longitude: info.coords.longitude,
+                latitudeDelta: 0.002,
+                longitudeDelta: 0.001,
+            })
+        });
 
     }, []);
 
@@ -242,12 +218,49 @@ export default function Home(){
                 && squareLatitude > square.latitude-(kmSquare*0.009)/2
                 && squareLatitude < square.latitude + (kmSquare*0.009)/2
             ){
-                setLineSelected(0)
+                setLineSelected(square.findPost);
                 setPowerSelected(square.value);
                 setShowInfo(true);
             }
         })
 
+    }
+
+    const changeColorSquares = (data) => {
+        setLineImportance(data);
+        // let newSquares = mySquares.map((square) => {
+        //     if(square.findPost){
+        //         square.value = square.value * (1 + lineImportance/100);
+        //         console.log(square.value);
+        //     }
+        //     return square;
+        // });
+        // let maxMin = [];
+        
+        // maxMin = maxMinValue(newSquares);
+    
+        // let interval = (maxMin[0] - maxMin[1])/9;
+        // let allIntervals = [];
+        // let squareWithColors = [];
+        // for(let i = 0; i < 9; i++){
+        //     allIntervals.push(
+        //         {min: maxMin[1]+(interval * i), max: maxMin[1]+(interval* (i+1)), color: colorNivel[i]}
+        //     )
+        // }
+        // for(let i = 0; i< 9; i++){
+        //     newSquares = newSquares.map((square) => {
+        //         if(square.findPost){
+        //             if(square.value >= allIntervals[i].min && square.value <= allIntervals[i].max){
+        //                 square.color = colorNivel[i];
+        //             }
+        //         } else {
+        //             if(square.value >= allIntervals[i].min && square.value <= allIntervals[i].max){
+        //                 square.color = colorNivel[i];
+        //             }
+        //         }
+        //         return square;
+        //     })
+        // }
     }
 
 
@@ -260,7 +273,7 @@ export default function Home(){
         let maxMin = [];
         setLoading(true);
         setShowInfo(false);
-        getBasic(kmSquare, squareLatitude, squareLongitude, false).then((dataNasa) => {
+        getBasic(kmSquare, squareLatitude, squareLongitude, true).then((dataNasa) => {
             let notAdd = {
                 topleft: 0,
                 topcenter: 0,
@@ -278,7 +291,8 @@ export default function Home(){
                 longitude: squareLongitude-(kmSquare*0.009), 
                 value: dataNasa.basic[0],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[0],
             };
     
             let objTopCenter = { 
@@ -286,7 +300,8 @@ export default function Home(){
                 longitude: squareLongitude, 
                 value: dataNasa.basic[1],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[1],
             }
     
             let objTopRight = { 
@@ -294,7 +309,8 @@ export default function Home(){
                 longitude: squareLongitude+(kmSquare*0.009), 
                 value: dataNasa.basic[2],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[2],
             }
     
             let objLeft = { 
@@ -302,7 +318,8 @@ export default function Home(){
                 longitude: squareLongitude-(kmSquare*0.009), 
                 value: dataNasa.basic[3],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[3],
             }
     
             let objCenter = { 
@@ -310,7 +327,8 @@ export default function Home(){
                 longitude: squareLongitude, 
                 value: dataNasa.basic[4],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[4],
             }
     
             let objRight = { 
@@ -318,7 +336,8 @@ export default function Home(){
                 longitude: squareLongitude+(kmSquare*0.009), 
                 value: dataNasa.basic[5],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[5],
             }
     
             let objBottomLeft = { 
@@ -326,7 +345,8 @@ export default function Home(){
                 longitude: squareLongitude-(kmSquare*0.009), 
                 value: dataNasa.basic[6],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[6],
             }
     
             let objBottomCenter = { 
@@ -334,7 +354,8 @@ export default function Home(){
                 longitude: squareLongitude, 
                 value: dataNasa.basic[7],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[7],
             }
     
             let objBottomRight = { 
@@ -342,7 +363,8 @@ export default function Home(){
                 longitude: squareLongitude+(kmSquare*0.009), 
                 value: dataNasa.basic[8],
                 color: colorNivel[0],
-                km: kmSquare
+                km: kmSquare,
+                findPost: dataNasa.comp[8],
             }
             
             mySquares.map((square) => {
@@ -436,7 +458,8 @@ export default function Home(){
                     longitude: oldLongitude-(kmSquare*0.009), 
                     value: dataNasa.basic[0],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[0],
                 };
         
                 objTopCenter = { 
@@ -444,7 +467,8 @@ export default function Home(){
                     longitude: oldLongitude, 
                     value: dataNasa.basic[1],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[1],
                 }
         
                 objTopRight = { 
@@ -452,7 +476,8 @@ export default function Home(){
                     longitude: oldLongitude+(kmSquare*0.009), 
                     value: dataNasa.basic[2],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[2],
                 }
         
                 objLeft = { 
@@ -460,7 +485,8 @@ export default function Home(){
                     longitude: oldLongitude-(kmSquare*0.009), 
                     value: dataNasa.basic[3],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[3],
                 }
         
                 objCenter = { 
@@ -468,7 +494,8 @@ export default function Home(){
                     longitude: oldLongitude, 
                     value: dataNasa.basic[4],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[4],
                 }
         
                 objRight = { 
@@ -476,7 +503,8 @@ export default function Home(){
                     longitude: oldLongitude+(kmSquare*0.009), 
                     value: dataNasa.basic[5],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[5],
                 }
         
                 objBottomLeft = { 
@@ -484,7 +512,8 @@ export default function Home(){
                     longitude: oldLongitude-(kmSquare*0.009), 
                     value: dataNasa.basic[6],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[6],
                 }
         
                 objBottomCenter = { 
@@ -492,7 +521,8 @@ export default function Home(){
                     longitude: oldLongitude, 
                     value: dataNasa.basic[7],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[7],
                 }
         
                 objBottomRight = { 
@@ -500,7 +530,8 @@ export default function Home(){
                     longitude: oldLongitude+(kmSquare*0.009), 
                     value: dataNasa.basic[8],
                     color: colorNivel[0],
-                    km: kmSquare
+                    km: kmSquare,
+                    findPost: dataNasa.comp[8],
                 }
             }
     
@@ -531,26 +562,68 @@ export default function Home(){
             if(!notAdd.bottomright){
                 newSquares.push(objBottomRight);
             }
+
+            let squaresToColor = [];
+            newSquares.map((square) => {
+                squaresToColor.push(square)
+            });
+
+            squaresToColor = squaresToColor.map((square) => {
+                if(square.findPost){
+                    square.value = square.value * (1+lineImportance/100);
+                }
+                return square;
+            })
     
-            maxMin = maxMinValue(newSquares);
+            maxMin = maxMinValue(squaresToColor);
+            realMaxMin = maxMinValue(newSquares);
     
             let interval = (maxMin[0] - maxMin[1])/9;
+            let realInterval = (realMaxMin[0] - realMaxMin[1])/9;
             let allIntervals = [];
-            let squareWithColors = [];
+            let realIntervals = [];
+
+            for(let i = 0; i < 9; i++){
+                realIntervals.push(
+                    {min: realMaxMin[1]+(realInterval * i), max: realMaxMin[1]+(realInterval* (i+1)), color: colorNivel[i]}
+                )
+            }
+
             for(let i = 0; i < 9; i++){
                 allIntervals.push(
                     {min: maxMin[1]+(interval * i), max: maxMin[1]+(interval* (i+1)), color: colorNivel[i]}
                 )
             }
             for(let i = 0; i< 9; i++){
-                newSquares = newSquares.map((square) => {
+                squaresToColor = squaresToColor.map((square) => {
                     if(square.value >= allIntervals[i].min && square.value <= allIntervals[i].max){
                         square.color = colorNivel[i];
                     }
                     return square;
                 })
             }
-            setPowerIntervals(allIntervals);
+
+            for(let i = 0; i < newSquares.length; i++ ){
+                newSquares[i].color = squaresToColor[i].color;
+            }
+
+            newSquares = squaresToColor.map((square) => {
+                if(square.findPost){
+                    square.value = square.value / (1+lineImportance/100);
+                }
+                return square;
+            })
+
+            realMaxMin = maxMinValue(newSquares);
+            realInterval = (realMaxMin[0] - realMaxMin[1])/9;
+            realIntervals = [];
+            for(let i = 0; i < 9; i++){
+                realIntervals.push(
+                    {min: realMaxMin[1]+(realInterval * i), max: realMaxMin[1]+(realInterval* (i+1)), color: colorNivel[i]}
+                )
+            }
+
+            setPowerIntervals(realIntervals);
             setLoading(false);
             setMySquares(newSquares);
         });
@@ -672,12 +745,13 @@ export default function Home(){
                             />
                         </View>
                         <View>
-                            <Text style={styles.textInfo}>Power Lines Relevance: 32%</Text>
+                            <Text style={styles.textInfo}>Power Lines Relevance: {lineImportance.toFixed(0)}%</Text>
                             <Slider
                                 style={{width: 200, height: 40}}
                                 minimumValue={0}
                                 maximumValue={100}
-                                value={32}
+                                value={lineImportance}
+                                onValueChange={changeColorSquares}
                                 minimumTrackTintColor="#000000"
                                 maximumTrackTintColor="#000000"
                             />
