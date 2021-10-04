@@ -85,8 +85,8 @@ We coded our app using JavaScript with the React Native framework. Also, we inse
     </td>
     <td align="center">
       <sub>
-        <b>Isadora Zappa</b>
-        <p>Marketing and Advertising</p>
+        <b>Isadora Zappa</b> <br>
+        <p>Marketing & Advertising</p>
       </sub>
     </td>
     <td align="center">
