@@ -30,56 +30,70 @@ We coded our app using JavaScript with the React Native framework. Also, we inse
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/aP8NbPe.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Anderson Muniz</b>
-          <p>Eletrical Engineering</p>
-        </sub>
       </a>
     </td>
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/0IN4XN3.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Caio Cesar</b>
-          <p>Computer Science</p>
-        </sub>
       </a>
     </td>
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/78vz4qm.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Gabriel Ferrari</b>
-          <p>Eletrical Engineering</p>
-        </sub>
       </a>
     </td>
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/fA9v8U2.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Isabela Madeira</b>
-          <p>International Relations</p>
-        </sub>
       </a>
     </td>
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/L34nOZ1.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Isadora Zappa</b>
-          <p>Marketing and Advertising</p>
-        </sub>
       </a>
     </td>
     <td align="center">
       <a href="#">
         <img src="https://i.imgur.com/M3ZeDzM.jpg" width="250px;" height="180px;"/><br>
-        <sub>
-          <b>Lucas Cruz</b> <br>
-          <p>Computer Science</p>
-        </sub>
       </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <sub>
+        <b>Anderson Muniz</b>
+        <p>Eletrical Engineering</p>
+      </sub>
+    </td>
+    <td align="center">
+      <sub>
+        <b>Caio Cesar</b>
+        <p>Computer Science</p>
+      </sub>
+    </td>
+    <td align="center">
+      <sub>
+        <b>Gabriel Ferrari</b>
+        <p>Eletrical Engineering</p>
+      </sub>
+    </td>
+    <td align="center">
+      <sub>
+        <b>Isabela Madeira</b>
+        <p>International Relations</p>
+      </sub>
+    </td>
+    <td align="center">
+      <sub>
+        <b>Isadora Zappa</b>
+        <p>Marketing and Advertising</p>
+      </sub>
+    </td>
+    <td align="center">
+      <sub>
+        <b>Lucas Cruz</b> <br>
+        <p>Computer Science</p>
+      </sub>
     </td>
   </tr>
 </table>
